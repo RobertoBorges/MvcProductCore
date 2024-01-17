@@ -643,4 +643,6 @@ public partial class AdventureWorksLt2016Context : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    public DbSet<MvcProductCore.Models.Feedback>? Feedback { get; set; }
 }

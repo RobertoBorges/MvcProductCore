@@ -10,3 +10,4 @@ Restore the database backup and using the type (localdb)\MSSQLLocalDB local SQL 
 
 Use the device option to restore the database.
 
+Some menus are broken, because it requires for instance CosmosDB, and applicatikon insigts.
