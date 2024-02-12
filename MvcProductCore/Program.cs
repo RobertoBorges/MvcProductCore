@@ -19,6 +19,8 @@ else
     builder.Services.AddDbContext<AdventureWorksLt2016Context>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("AdventureWorksDbContext")));
 }
+
+// Uncomment the following line to add services for Cosmos DB
 //builder.Services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(builder.Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
 builder.Services.Configure<DbConnectionSettings>(builder.Configuration.GetSection("ConnectionStrings"));
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
