@@ -12,7 +12,7 @@ builder.Services.AddRazorPages();
 if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
 {
     builder.Services.AddDbContext<AdventureWorksLt2016Context>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("AdventureWorksDbContext")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("AdventureWorksDbContextAzure")));
 }
 else
 {
