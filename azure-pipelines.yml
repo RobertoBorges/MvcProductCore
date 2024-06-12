@@ -1,0 +1,55 @@
+trigger:
+- master
+
+pool:
+  name: 'Default'
+  #vmImage: 'linux-latest' #if building using azure pipelines
+  
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs:
+  - job: BuildJob
+    displayName: Build .NET Application
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Use .NET 8 SDK'
+      inputs:
+        version: '8.x'
+        includePreviewVersions: true # If .NET 8 is still in preview, set this to true
+
+    - script: dotnet restore
+      displayName: 'Restore dependencies'
+
+    - script: dotnet publish --no-restore --configuration Release -o $(Build.ArtifactStagingDirectory)
+      displayName: 'Build application'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifacts'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'container'
+
+- stage: Release
+  displayName: Release stage
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: ReleaseJob
+    displayName: Deploy .NET Application
+    environment: 'production' # Ensure this environment is pre-configured in Azure DevOps
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: <Your Azure Subscription>
+              appType: 'webApp'
+              WebAppName: 'Your Web App Name'
+              packageForLinux: '$(Agent.BuildDirectory)/drop/'
